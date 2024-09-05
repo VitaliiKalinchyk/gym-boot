@@ -8,6 +8,6 @@ public interface NameGenerator {
 
     String generateUsername(User user);
 
-    String generateUsername(User user, List<String> userNames);
+    String generateUsername(String username, List<String> existingUsername);
 
 }

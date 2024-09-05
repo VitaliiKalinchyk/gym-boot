@@ -15,16 +15,14 @@ public class NameGeneratorImpl implements NameGenerator {
     }
 
     @Override
-    public String generateUsername(User user, List<String> userNames) {
-        String baseUsername = generateUsername(user);
-
-        int maxIndex = userNames.stream()
+    public String generateUsername(String username, List<String> existingUsername) {
+        int maxIndex = existingUsername.stream()
                         .map(userName -> userName.replaceAll("\\D+?(\\d*)$", "$1"))
                         .filter(s -> !s.isEmpty())
                         .mapToInt(Integer::parseInt)
                         .max()
                         .orElse(0);
 
-        return baseUsername + (maxIndex + 1);
+        return username + (maxIndex + 1);
     }
 }

@@ -31,26 +31,18 @@ class NameGeneratorImplTest {
 
     @Test
     public void testGenerateUsernameWithExistingUsernames() {
-        User user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-
         List<String> existingUsernames = List.of("John.Doe1", "John.Doe2");
 
-        String generatedUsername = nameGenerator.generateUsername(user, existingUsernames);
+        String generatedUsername = nameGenerator.generateUsername("John.Doe", existingUsernames);
 
         assertEquals("John.Doe3", generatedUsername);
     }
 
     @Test
     public void testGenerateUsernameWithNoExistingIndexes() {
-        User user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-
         List<String> existingUsernames = List.of("John.Doe");
 
-        String generatedUsername = nameGenerator.generateUsername(user, existingUsernames);
+        String generatedUsername = nameGenerator.generateUsername("John.Doe", existingUsernames);
 
         assertEquals("John.Doe1", generatedUsername);
     }
