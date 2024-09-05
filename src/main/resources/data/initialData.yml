@@ -1,0 +1,66 @@
+trainees:
+  - traineeId: 1
+    user:
+      userId: 1
+      firstName: Karl
+      lastName: Gunner
+      username: Karl.Gunner
+      password: A1s12DytRd
+      active: TRUE
+    birthday: 1999-10-01
+    address: Springfield, Valentine st., 4
+  - traineeId: 3
+    user:
+      userId: 4
+      firstName: Jane
+      lastName: Foster
+      username: Jane.Foster
+      password: jRUfnL1McU
+      active: FALSE
+    birthday: 1992-01-10
+    address: Springfield, St.Patric st., 204
+  - traineeId: 4
+    user:
+      userId: 5
+      firstName: Sara
+      lastName: Smith
+      username: Sara.Smith
+      password: once8GG35J
+      active: TRUE
+    birthday: 1985-03-25
+    address: Springfield, St.Patric st., 95
+
+trainers:
+  - trainerId: 1
+    user:
+      userId: 2
+      firstName: Karl
+      lastName: Gunner
+      username: Karl.Gunner1
+      password: JJFzh6qC9y
+      active: TRUE
+    trainingType: YOGA
+  - trainerId: 2
+    user:
+      firstName: Chloe
+      lastName: Gunner
+      username: Chloe.Gunner
+      password: 8Ho06xtTXK
+      active: TRUE
+    trainingType: ZUMBA
+
+trainings:
+  - trainingId: 1
+    traineeId: 1
+    trainerId: 2
+    name: first training
+    trainingType: ZUMBA
+    date: 2024-08-17
+    durationMinutes: 60
+  - trainingId: 2
+    traineeId: 3
+    trainerId: 1
+    name: hard training
+    trainingType: YOGA
+    date: 2024-09-17
+    durationMinutes: 120
