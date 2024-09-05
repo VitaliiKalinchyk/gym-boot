@@ -1,3 +1,6 @@
 spring:
   application:
     name: gym-boot
+
+password:
+  length: 10
