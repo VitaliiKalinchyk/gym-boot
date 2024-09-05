@@ -19,7 +19,7 @@ public class NameGeneratorImpl implements NameGenerator {
         String baseUsername = generateUsername(user);
 
         int maxIndex = userNames.stream()
-                        .map(userName -> userName.replaceAll("\\D+?(\\d+)$", "$1"))
+                        .map(userName -> userName.replaceAll("\\D+?(\\d*)$", "$1"))
                         .filter(s -> !s.isEmpty())
                         .mapToInt(Integer::parseInt)
                         .max()

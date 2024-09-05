@@ -1,0 +1,8 @@
+spring:
+  config:
+    import: "optional:file:.env[.properties]"
+  application:
+    name: gym-boot
+
+password:
+  length: ${password_length_test}
