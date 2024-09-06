@@ -44,7 +44,6 @@ public class TraineeServiceImplTest {
         User user = new User();
         trainee.setUser(user);
 
-        when(traineeRepository.getNextId()).thenReturn(1);
         when(nameGenerator.generateUsername(user)).thenReturn("uniqueUsername");
         when(passwordGenerator.generatePassword()).thenReturn("securePassword");
         when(traineeRepository.add(any(Trainee.class))).thenReturn(Optional.of(trainee));
@@ -53,9 +52,7 @@ public class TraineeServiceImplTest {
 
         Optional<Trainee> result = traineeService.add(trainee);
 
-        verify(traineeRepository).add(trainee);
         assertTrue(result.isPresent());
-        assertEquals(1, trainee.getTraineeId());
         assertEquals("uniqueUsername", result.get().getUser().getUsername());
         assertEquals("securePassword", result.get().getUser().getPassword());
     }

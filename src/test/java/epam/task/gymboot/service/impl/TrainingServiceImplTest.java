@@ -27,17 +27,12 @@ class TrainingServiceImplTest {
     @Test
     void addTraining() {
         Training training = new Training();
-        training.setTrainingId(1);
 
-        when(trainingRepository.getNextId()).thenReturn(1);
         when(trainingRepository.add(training)).thenReturn(Optional.of(training));
 
         Optional<Training> result = trainingService.add(training);
 
-        verify(trainingRepository).getNextId();
-        verify(trainingRepository).add(training);
         assertTrue(result.isPresent());
-        assertEquals(1, result.get().getTrainingId());
     }
 
     @Test

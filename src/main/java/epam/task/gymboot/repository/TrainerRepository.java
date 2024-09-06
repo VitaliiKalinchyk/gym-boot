@@ -18,6 +18,4 @@ public interface TrainerRepository {
     List<Trainer> getTrainers();
 
     List<String> getAllTrainerUsernamesByUsername(String username);
-
-    int getNextId();
 }

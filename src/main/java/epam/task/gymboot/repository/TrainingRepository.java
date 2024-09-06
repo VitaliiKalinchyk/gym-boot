@@ -11,6 +11,4 @@ public interface TrainingRepository {
     Optional<Training> getById(int trainingId);
 
     List<Training> getTrainings();
-
-    int getNextId();
 }

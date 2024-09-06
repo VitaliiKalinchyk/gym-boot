@@ -19,9 +19,6 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public Optional<Training> add(Training training) {
-        int nextId = trainingRepository.getNextId();
-        training.setTrainingId(nextId);
-
         return trainingRepository.add(training);
     }
 

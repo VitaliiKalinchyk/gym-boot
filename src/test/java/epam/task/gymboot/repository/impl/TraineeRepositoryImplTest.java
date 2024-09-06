@@ -26,7 +26,6 @@ public class TraineeRepositoryImplTest {
     @Test
     public void testAddTrainee() {
         Trainee trainee = new Trainee();
-        trainee.setTraineeId(1);
 
         when(trainees.put(1, trainee)).thenReturn(null);
         when(trainees.get(1)).thenReturn(trainee);
@@ -170,15 +169,5 @@ public class TraineeRepositoryImplTest {
         assertEquals(2, expectedUsernames.size());
         assertTrue(result.containsAll(expectedUsernames) && expectedUsernames.containsAll(result),
                 "The result list does not match the expected list");
-    }
-
-    @Test
-    public void testGetNextId() {
-        when(trainees.keySet()).thenReturn(Set.of(1, 2, 3));
-
-        int nextId = traineeRepository.getNextId();
-
-        verify(trainees).keySet();
-        assertEquals(4, nextId);
     }
 }

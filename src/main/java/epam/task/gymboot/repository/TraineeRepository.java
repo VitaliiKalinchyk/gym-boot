@@ -20,6 +20,4 @@ public interface TraineeRepository {
     List<Trainee> getTrainees();
 
     List<String> getAllTraineeUsernamesByUsername(String username);
-
-    int getNextId();
 }

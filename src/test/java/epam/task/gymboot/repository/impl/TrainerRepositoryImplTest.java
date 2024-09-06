@@ -26,7 +26,6 @@ public class TrainerRepositoryImplTest {
     @Test
     public void testAddTrainer() {
         Trainer trainer = new Trainer();
-        trainer.setTrainerId(1);
 
         when(trainers.put(1, trainer)).thenReturn(null);
         when(trainers.get(1)).thenReturn(trainer);
@@ -149,15 +148,5 @@ public class TrainerRepositoryImplTest {
         assertEquals(2, expectedUsernames.size());
         assertTrue(result.containsAll(expectedUsernames) && expectedUsernames.containsAll(result),
                 "The result list does not match the expected list");
-    }
-
-    @Test
-    public void testGetNextId() {
-        when(trainers.keySet()).thenReturn(Set.of(1, 2, 3));
-
-        int nextId = trainerRepository.getNextId();
-
-        verify(trainers).keySet();
-        assertEquals(4, nextId);
     }
 }

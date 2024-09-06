@@ -31,9 +31,6 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Optional<Trainer> add(Trainer trainer) {
-        int nextId = trainerRepository.getNextId();
-
-        trainer.setTrainerId(nextId);
         trainer.getUser().setUsername(generateUsername(trainer));
         trainer.getUser().setPassword(passwordGenerator.generatePassword());
 

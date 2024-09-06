@@ -23,7 +23,8 @@ public class TraineeRepositoryImpl implements TraineeRepository {
 
     @Override
     public Optional<Trainee> add(Trainee trainee) {
-        int traineeId = trainee.getTraineeId();
+        int traineeId = getNextId();
+        trainee.setTraineeId(traineeId);
         log.debug("Adding trainee with ID {}: {}", traineeId, trainee);
         trainees.put(traineeId, trainee);
         Optional<Trainee> result = getById(traineeId);
@@ -83,8 +84,7 @@ public class TraineeRepositoryImpl implements TraineeRepository {
         return usernames;
     }
 
-    @Override
-    public int getNextId() {
+    private int getNextId() {
         int nextId = trainees.keySet()
                              .stream()
                              .max(Integer::compareTo)

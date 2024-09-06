@@ -23,7 +23,8 @@ public class TrainerRepositoryImpl implements TrainerRepository {
 
     @Override
     public Optional<Trainer> add(Trainer trainer) {
-        int trainerId = trainer.getTrainerId();
+        int trainerId = getNextId();
+        trainer.setTrainerId(trainerId);
         log.debug("Adding trainer with ID {}: {}", trainerId, trainer);
         trainers.put(trainerId, trainer);
         Optional<Trainer> result = getById(trainerId);
@@ -75,8 +76,7 @@ public class TrainerRepositoryImpl implements TrainerRepository {
         return usernames;
     }
 
-    @Override
-    public int getNextId() {
+    private int getNextId() {
         int nextId = trainers.keySet()
                              .stream()
                              .max(Integer::compareTo)

@@ -31,9 +31,6 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Optional<Trainee> add(Trainee trainee) {
-        int nextId = traineeRepository.getNextId();
-
-        trainee.setTraineeId(nextId);
         trainee.getUser().setUsername(generateUsername(trainee));
         trainee.getUser().setPassword(passwordGenerator.generatePassword());
 

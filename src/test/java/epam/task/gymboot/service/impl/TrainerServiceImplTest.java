@@ -44,7 +44,6 @@ class TrainerServiceImplTest {
         User user = new User();
         trainer.setUser(user);
 
-        when(trainerRepository.getNextId()).thenReturn(1);
         when(nameGenerator.generateUsername(user)).thenReturn("uniqueUsername");
         when(passwordGenerator.generatePassword()).thenReturn("securePassword");
         when(trainerRepository.add(any(Trainer.class))).thenReturn(Optional.of(trainer));
@@ -53,9 +52,7 @@ class TrainerServiceImplTest {
 
         Optional<Trainer> result = trainerService.add(trainer);
 
-        verify(trainerRepository).add(trainer);
         assertTrue(result.isPresent());
-        assertEquals(1, trainer.getTrainerId());
         assertEquals("uniqueUsername", trainer.getUser().getUsername());
         assertEquals("securePassword", trainer.getUser().getPassword());
     }

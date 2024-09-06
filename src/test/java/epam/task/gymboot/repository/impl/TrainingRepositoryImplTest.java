@@ -76,14 +76,4 @@ public class TrainingRepositoryImplTest {
         verify(trainings).values();
         assertEquals(trainingList, result);
     }
-
-    @Test
-    public void testGetNextId() {
-        when(trainings.keySet()).thenReturn(Set.of(1, 2, 3));
-
-        int nextId = trainingRepository.getNextId();
-
-        verify(trainings).keySet();
-        assertEquals(4, nextId);
-    }
 }

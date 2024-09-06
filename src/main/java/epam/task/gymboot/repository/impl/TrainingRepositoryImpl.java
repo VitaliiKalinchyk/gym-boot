@@ -19,7 +19,8 @@ public class TrainingRepositoryImpl implements TrainingRepository {
 
     @Override
     public Optional<Training> add(Training training) {
-        int trainingId = training.getTrainingId();
+        int trainingId = getNextId();
+        training.setTrainingId(trainingId);
         log.debug("Adding training with ID {}: {}", trainingId, training);
         trainings.put(trainingId, training);
         Optional<Training> result = getById(trainingId);
@@ -45,8 +46,7 @@ public class TrainingRepositoryImpl implements TrainingRepository {
         return trainingList;
     }
 
-    @Override
-    public int getNextId() {
+    private int getNextId() {
         int nextId = trainings.keySet()
                               .stream()
                               .max(Integer::compareTo)
