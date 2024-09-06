@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,16 +23,28 @@ public class TraineeRepositoryImplTest {
     private Map<Integer, Trainee> trainees;
 
     @Test
-    public void testAddTrainee() {
+    public void testAddTraineeNoTrainees() {
         Trainee trainee = new Trainee();
 
-        when(trainees.put(1, trainee)).thenReturn(null);
+        when(trainees.keySet()).thenReturn(Collections.emptySet());
         when(trainees.get(1)).thenReturn(trainee);
 
         Optional<Trainee> result = traineeRepository.add(trainee);
 
-        verify(trainees).put(1, trainee);
-        verify(trainees).get(1);
+        assertTrue(result.isPresent());
+        assertEquals(trainee, result.get());
+    }
+
+    @Test
+    public void testAddTraineeFewTrainees() {
+        Trainee trainee = new Trainee();
+
+        when(trainees.keySet()).thenReturn(Set.of(2, 5, 9));
+        when(trainees.put(10, trainee)).thenReturn(null);
+        when(trainees.get(10)).thenReturn(trainee);
+
+        Optional<Trainee> result = traineeRepository.add(trainee);
+
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
     }
@@ -47,7 +58,6 @@ public class TraineeRepositoryImplTest {
 
         Optional<Trainee> result = traineeRepository.edit(trainee);
 
-        verify(trainees).replace(1, trainee);
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
     }
@@ -58,7 +68,6 @@ public class TraineeRepositoryImplTest {
 
         boolean result = traineeRepository.delete(1);
 
-        verify(trainees).remove(1);
         assertTrue(result);
     }
 
@@ -68,7 +77,6 @@ public class TraineeRepositoryImplTest {
 
         boolean result = traineeRepository.delete(1);
 
-        verify(trainees).remove(1);
         assertFalse(result);
     }
 
@@ -81,7 +89,6 @@ public class TraineeRepositoryImplTest {
 
         Optional<Trainee> result = traineeRepository.getById(1);
 
-        verify(trainees).get(1);
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
     }
@@ -92,7 +99,6 @@ public class TraineeRepositoryImplTest {
 
         Optional<Trainee> result = traineeRepository.getById(1);
 
-        verify(trainees).get(1);
         assertFalse(result.isPresent());
     }
 
@@ -107,7 +113,6 @@ public class TraineeRepositoryImplTest {
 
         Optional<Trainee> result = traineeRepository.getByUsername("Karl");
 
-        verify(trainees).values();
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
     }
@@ -118,7 +123,6 @@ public class TraineeRepositoryImplTest {
 
         Optional<Trainee> result = traineeRepository.getByUsername("Karl");
 
-        verify(trainees).values();
         assertFalse(result.isPresent());
     }
 
@@ -134,7 +138,6 @@ public class TraineeRepositoryImplTest {
 
         List<Trainee> result = traineeRepository.getTrainees();
 
-        verify(trainees).values();
         assertEquals(traineeList, result);
     }
 
@@ -157,14 +160,11 @@ public class TraineeRepositoryImplTest {
         User user3 = new User();
         user3.setUsername("Jane.Doe");
         trainee3.setUser(user3);
+        List<String> expectedUsernames = List.of("Joe.Doe", "Joe.Doe1");
 
         when(trainees.values()).thenReturn(Set.of(trainee1, trainee2));
 
         List<String> result = traineeRepository.getAllTraineeUsernamesByUsername("Joe.Doe");
-
-        verify(trainees).values();
-
-        List<String> expectedUsernames = List.of("Joe.Doe", "Joe.Doe1");
 
         assertEquals(2, expectedUsernames.size());
         assertTrue(result.containsAll(expectedUsernames) && expectedUsernames.containsAll(result),

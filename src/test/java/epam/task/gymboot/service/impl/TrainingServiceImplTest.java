@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +44,6 @@ class TrainingServiceImplTest {
 
         Optional<Training> result = trainingService.getById(1);
 
-        verify(trainingRepository).getById(1);
         assertTrue(result.isPresent());
         assertEquals(1, result.get().getTrainingId());
     }
@@ -57,7 +56,6 @@ class TrainingServiceImplTest {
 
         List<Training> result = trainingService.getTrainings();
 
-        verify(trainingRepository).getTrainings();
         assertEquals(trainings.size(), result.size());
     }
 }

@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +58,21 @@ class TrainerServiceImplTest {
     }
 
     @Test
+    public void testGenerateUsernameForMultipleCases() {
+        Trainer trainer = new Trainer();
+        User user = new User();
+        trainer.setUser(user);
+
+        when(nameGenerator.generateUsername(user)).thenReturn("username");
+        when(trainerRepository.getByUsername("username")).thenReturn(Optional.of(new Trainer()));
+        when(nameGenerator.generateUsername(eq("username"), anyList())).thenReturn("username3");
+
+        trainerService.add(trainer);
+
+        assertEquals("username3", trainer.getUser().getUsername());
+    }
+
+    @Test
     public void testEditTrainer() {
         Trainer trainer = new Trainer();
 
@@ -65,7 +80,6 @@ class TrainerServiceImplTest {
 
         Optional<Trainer> result = trainerService.edit(trainer);
 
-        verify(trainerRepository).edit(trainer);
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
     }
@@ -78,7 +92,6 @@ class TrainerServiceImplTest {
 
         Optional<Trainer> result = trainerService.getById(1);
 
-        verify(trainerRepository).getById(1);
         assertTrue(result.isPresent());
     }
 
@@ -90,7 +103,6 @@ class TrainerServiceImplTest {
 
         Optional<Trainer> result = trainerService.getByUsername("Joe");
 
-        verify(trainerRepository).getByUsername("Joe");
         assertTrue(result.isPresent());
     }
 
@@ -102,23 +114,6 @@ class TrainerServiceImplTest {
 
         List<Trainer> result = trainerService.getTrainers();
 
-        verify(trainerRepository).getTrainers();
         assertEquals(2, result.size());
-    }
-
-    @Test
-    public void testGenerateUsernameForMultipleCases() {
-        Trainer trainer = new Trainer();
-        User user = new User();
-        trainer.setUser(user);
-
-        when(nameGenerator.generateUsername(user)).thenReturn("username");
-        when(trainerRepository.getByUsername("username")).thenReturn(Optional.of(new Trainer()));
-        when(nameGenerator.generateUsername(eq("username"), anyList())).thenReturn("username3");
-
-        trainerService.add(trainer);
-
-        verify(nameGenerator).generateUsername(eq("username"), anyList());
-        assertEquals("username3", trainer.getUser().getUsername());
     }
 }

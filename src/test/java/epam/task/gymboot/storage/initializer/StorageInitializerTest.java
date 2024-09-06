@@ -1,8 +1,7 @@
-package epam.task.gymboot.storage.initializer.impl;
+package epam.task.gymboot.storage.initializer;
 
 import epam.task.gymboot.storage.Storage;
 
-import epam.task.gymboot.storage.initializer.StorageInitializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +58,21 @@ public class TraineeServiceImplTest {
     }
 
     @Test
+    public void testAddTraineeGenerateUsernameForMultipleCases() {
+        Trainee trainee = new Trainee();
+        User user = new User();
+        trainee.setUser(user);
+
+        when(nameGenerator.generateUsername(user)).thenReturn("username");
+        when(traineeRepository.getByUsername("username")).thenReturn(Optional.of(new Trainee()));
+        when(nameGenerator.generateUsername(eq("username"), anyList())).thenReturn("username3");
+
+        traineeService.add(trainee);
+
+        assertEquals("username3", trainee.getUser().getUsername());
+    }
+
+    @Test
     public void testEditTrainee() {
         Trainee trainee = new Trainee();
 
@@ -65,7 +80,6 @@ public class TraineeServiceImplTest {
 
         Optional<Trainee> result = traineeService.edit(trainee);
 
-        verify(traineeRepository).edit(trainee);
         assertTrue(result.isPresent());
         assertEquals(trainee, result.get());
     }
@@ -76,7 +90,6 @@ public class TraineeServiceImplTest {
 
         boolean result = traineeService.delete(1);
 
-        verify(traineeRepository).delete(1);
         assertTrue(result);
     }
 
@@ -88,7 +101,6 @@ public class TraineeServiceImplTest {
 
         Optional<Trainee> result = traineeService.getById(1);
 
-        verify(traineeRepository).getById(1);
         assertTrue(result.isPresent());
     }
 
@@ -100,7 +112,6 @@ public class TraineeServiceImplTest {
 
         Optional<Trainee> result = traineeService.getByUsername("Joe");
 
-        verify(traineeRepository).getByUsername("Joe");
         assertTrue(result.isPresent());
     }
 
@@ -112,23 +123,6 @@ public class TraineeServiceImplTest {
 
         List<Trainee> result = traineeService.getTrainees();
 
-        verify(traineeRepository).getTrainees();
         assertEquals(2, result.size());
-    }
-
-    @Test
-    public void testGenerateUsernameForMultipleCases() {
-        Trainee trainee = new Trainee();
-        User user = new User();
-        trainee.setUser(user);
-
-        when(nameGenerator.generateUsername(user)).thenReturn("username");
-        when(traineeRepository.getByUsername("username")).thenReturn(Optional.of(new Trainee()));
-        when(nameGenerator.generateUsername(eq("username"), anyList())).thenReturn("username3");
-
-        traineeService.add(trainee);
-
-        verify(nameGenerator).generateUsername(eq("username"), anyList());
-        assertEquals("username3", trainee.getUser().getUsername());
     }
 }

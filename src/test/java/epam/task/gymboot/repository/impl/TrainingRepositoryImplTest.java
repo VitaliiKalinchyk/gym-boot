@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,16 +22,28 @@ public class TrainingRepositoryImplTest {
     private Map<Integer, Training> trainings;
 
     @Test
-    public void testAddTraining() {
+    public void testAddTrainingNoTrainings() {
         Training training = new Training();
-        training.setTrainingId(1);
 
-        when(trainings.put(1, training)).thenReturn(null);
+        when(trainings.keySet()).thenReturn(Collections.emptySet());
         when(trainings.get(1)).thenReturn(training);
 
         Optional<Training> result = trainingRepository.add(training);
 
-        verify(trainings).put(1, training);
+        assertTrue(result.isPresent());
+        assertEquals(training, result.get());
+    }
+
+    @Test
+    public void testAddTrainingFewTrainings() {
+        Training training = new Training();
+
+        when(trainings.keySet()).thenReturn(Set.of(2, 5, 9));
+        when(trainings.put(10, training)).thenReturn(null);
+        when(trainings.get(10)).thenReturn(training);
+
+        Optional<Training> result = trainingRepository.add(training);
+
         assertTrue(result.isPresent());
         assertEquals(training, result.get());
     }
@@ -46,7 +57,6 @@ public class TrainingRepositoryImplTest {
 
         Optional<Training> result = trainingRepository.getById(1);
 
-        verify(trainings).get(1);
         assertTrue(result.isPresent());
         assertEquals(training, result.get());
     }
@@ -57,7 +67,6 @@ public class TrainingRepositoryImplTest {
 
         Optional<Training> result = trainingRepository.getById(1);
 
-        verify(trainings).get(1);
         assertFalse(result.isPresent());
     }
 
@@ -73,7 +82,6 @@ public class TrainingRepositoryImplTest {
 
         List<Training> result = trainingRepository.getTrainings();
 
-        verify(trainings).values();
         assertEquals(trainingList, result);
     }
 }

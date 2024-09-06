@@ -11,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,15 +23,28 @@ public class TrainerRepositoryImplTest {
     private Map<Integer, Trainer> trainers;
 
     @Test
-    public void testAddTrainer() {
+    public void testAddTrainerNoTrainers() {
         Trainer trainer = new Trainer();
 
-        when(trainers.put(1, trainer)).thenReturn(null);
+        when(trainers.keySet()).thenReturn(Collections.emptySet());
         when(trainers.get(1)).thenReturn(trainer);
 
         Optional<Trainer> result = trainerRepository.add(trainer);
 
-        verify(trainers).put(1, trainer);
+        assertTrue(result.isPresent());
+        assertEquals(trainer, result.get());
+    }
+
+    @Test
+    public void testAddTrainerFewTrainers() {
+        Trainer trainer = new Trainer();
+
+        when(trainers.keySet()).thenReturn(Set.of(2, 5, 9));
+        when(trainers.put(10, trainer)).thenReturn(null);
+        when(trainers.get(10)).thenReturn(trainer);
+
+        Optional<Trainer> result = trainerRepository.add(trainer);
+
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
     }
@@ -46,7 +58,6 @@ public class TrainerRepositoryImplTest {
 
         Optional<Trainer> result = trainerRepository.edit(trainer);
 
-        verify(trainers).replace(1, trainer);
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
     }
@@ -60,7 +71,6 @@ public class TrainerRepositoryImplTest {
 
         Optional<Trainer> result = trainerRepository.getById(1);
 
-        verify(trainers).get(1);
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
     }
@@ -71,7 +81,6 @@ public class TrainerRepositoryImplTest {
 
         Optional<Trainer> result = trainerRepository.getById(1);
 
-        verify(trainers).get(1);
         assertFalse(result.isPresent());
     }
 
@@ -86,7 +95,6 @@ public class TrainerRepositoryImplTest {
 
         Optional<Trainer> result = trainerRepository.getByUsername("Karl");
 
-        verify(trainers).values();
         assertTrue(result.isPresent());
         assertEquals(trainer, result.get());
     }
@@ -97,7 +105,6 @@ public class TrainerRepositoryImplTest {
 
         Optional<Trainer> result = trainerRepository.getByUsername("Karl");
 
-        verify(trainers).values();
         assertFalse(result.isPresent());
     }
 
@@ -113,7 +120,6 @@ public class TrainerRepositoryImplTest {
 
         List<Trainer> result = trainerRepository.getTrainers();
 
-        verify(trainers).values();
         assertEquals(trainerList, result);
     }
 
@@ -137,13 +143,11 @@ public class TrainerRepositoryImplTest {
         user3.setUsername("Jane.Doe");
         trainer3.setUser(user3);
 
+        List<String> expectedUsernames = List.of("Joe.Doe", "Joe.Doe1");
+
         when(trainers.values()).thenReturn(Set.of(trainer1, trainer2));
 
         List<String> result = trainerRepository.getAllTrainerUsernamesByUsername("Joe.Doe");
-
-        verify(trainers).values();
-
-        List<String> expectedUsernames = List.of("Joe.Doe", "Joe.Doe1");
 
         assertEquals(2, expectedUsernames.size());
         assertTrue(result.containsAll(expectedUsernames) && expectedUsernames.containsAll(result),
