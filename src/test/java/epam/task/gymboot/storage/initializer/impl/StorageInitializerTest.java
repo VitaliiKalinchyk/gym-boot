@@ -2,6 +2,7 @@ package epam.task.gymboot.storage.initializer.impl;
 
 import epam.task.gymboot.storage.Storage;
 
+import epam.task.gymboot.storage.initializer.StorageInitializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @ExtendWith(MockitoExtension.class)
-public class StorageInitializerImplTest {
+public class StorageInitializerTest {
 
     @InjectMocks
-    private StorageInitializerImpl storageInitializer;
+    private StorageInitializer storageInitializer;
 
     @Mock
     private Storage storage;

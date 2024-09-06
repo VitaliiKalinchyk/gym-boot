@@ -20,20 +20,20 @@ public class StorageConfig {
     private final Storage storage;
 
     @Bean
-    @DependsOn("storageInitializerImpl")
+    @DependsOn("storageInitializer")
     public Map<Integer, Trainee> trainees() {
         return storage.getTrainees();
     }
 
     @Bean
-    @DependsOn("storageInitializerImpl")
+    @DependsOn("storageInitializer")
     public Map<Integer, Trainer> trainers() {
         return storage.getTrainers();
     }
 
 
     @Bean
-    @DependsOn("storageInitializerImpl")
+    @DependsOn("storageInitializer")
     public Map<Integer, Training> trainings() {
         return storage.getTrainings();
     }

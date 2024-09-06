@@ -1,4 +1,4 @@
-package epam.task.gymboot.storage.initializer.impl;
+package epam.task.gymboot.storage.initializer;
 
 import epam.task.gymboot.entity.Trainee;
 import epam.task.gymboot.entity.Trainer;
