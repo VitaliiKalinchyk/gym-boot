@@ -2,14 +2,11 @@ package epam.task.gymboot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class GymBootApplication {
 
 	public static void main(String[] args) {
-		ApplicationContext context = SpringApplication.run(GymBootApplication.class, args);
-
-
+		SpringApplication.run(GymBootApplication.class, args);
 	}
 }

@@ -1,6 +1,5 @@
 package epam.task.gymboot.service.impl;
 
-import epam.task.gymboot.entity.User;
 import epam.task.gymboot.repository.TraineeRepository;
 import epam.task.gymboot.repository.TrainerRepository;
 import epam.task.gymboot.entity.Trainee;
@@ -10,6 +9,7 @@ import epam.task.gymboot.service.TraineeService;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeRepository traineeRepository;
@@ -65,22 +66,22 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     private String generateUsername(Trainee trainee) {
-        User user = trainee.getUser();
-        String username = nameGenerator.generateUsername(user);
+        String username = nameGenerator.generateUsername(trainee.getUser());
 
         if (traineeRepository.getByUsername(username).isEmpty() &&
                 trainerRepository.getByUsername(username).isEmpty()) {
             return username;
         }
 
-        return generateUsernameForMultipleCases(username, user);
+        return generateUsernameForMultipleCases(username);
     }
 
-    private String generateUsernameForMultipleCases(String username, User user){
-        List<String> usernames = Stream.concat(traineeRepository.getAllTraineeUsernamesByUsername(username).stream(),
-                                               trainerRepository.getAllTrainerUsernamesByUsername(username).stream())
-                                       .toList();
+    private String generateUsernameForMultipleCases(String username){
+        List<String> usernames = Stream.concat(
+                        traineeRepository.getAllTraineeUsernamesByUsername(username).stream(),
+                        trainerRepository.getAllTrainerUsernamesByUsername(username).stream())
+                .toList();
 
-        return nameGenerator.generateUsername(user, usernames);
+        return nameGenerator.generateUsername(username, usernames);
     }
 }
