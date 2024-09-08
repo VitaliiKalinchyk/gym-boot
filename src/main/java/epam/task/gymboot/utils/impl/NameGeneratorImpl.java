@@ -6,12 +6,14 @@ import epam.task.gymboot.utils.NameGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class NameGeneratorImpl implements NameGenerator {
     @Override
     public String generateUsername(User user) {
-        return user.getFirstName() + "." + user.getLastName();
+        return Objects.requireNonNull(user.getFirstName(), "First name is null") + "."
+                + Objects.requireNonNull(user.getLastName(), "Last name is null");
     }
 
     @Override
