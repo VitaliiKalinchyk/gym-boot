@@ -7,6 +7,7 @@ import epam.task.gymboot.repository.TrainerRepository;
 import epam.task.gymboot.utils.NameGenerator;
 import epam.task.gymboot.utils.PasswordGenerator;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,15 +39,23 @@ public class TraineeServiceImplTest {
     @InjectMocks
     private TraineeServiceImpl traineeService;
 
+    private Trainee trainee;
+    private User user;
+
+
+    @BeforeEach
+    void setUp() {
+        trainee = new Trainee();
+        user = new User();
+    }
+
     @Test
     public void testAddTrainee() {
-        Trainee trainee = new Trainee();
-        User user = new User();
         trainee.setUser(user);
 
         when(nameGenerator.generateUsername(user)).thenReturn("uniqueUsername");
         when(passwordGenerator.generatePassword()).thenReturn("securePassword");
-        when(traineeRepository.add(any(Trainee.class))).thenReturn(Optional.of(trainee));
+        when(traineeRepository.add(trainee)).thenReturn(Optional.of(trainee));
         when(trainerRepository.getByUsername("uniqueUsername")).thenReturn(Optional.empty());
         when(traineeRepository.getByUsername("uniqueUsername")).thenReturn(Optional.empty());
 
@@ -59,8 +68,6 @@ public class TraineeServiceImplTest {
 
     @Test
     public void testAddTraineeGenerateUsernameForMultipleCases() {
-        Trainee trainee = new Trainee();
-        User user = new User();
         trainee.setUser(user);
 
         when(nameGenerator.generateUsername(user)).thenReturn("username");
@@ -73,9 +80,14 @@ public class TraineeServiceImplTest {
     }
 
     @Test
-    public void testEditTrainee() {
-        Trainee trainee = new Trainee();
+    public void testAddTraineeNoUser() {
+        RuntimeException exception = assertThrows(NullPointerException.class, () -> traineeService.add(trainee));
 
+        assertEquals("Adding trainee failed - user is null", exception.getMessage());
+    }
+
+    @Test
+    public void testEditTrainee() {
         when(traineeRepository.edit(trainee)).thenReturn(Optional.of(trainee));
 
         Optional<Trainee> result = traineeService.edit(trainee);
@@ -95,8 +107,6 @@ public class TraineeServiceImplTest {
 
     @Test
     public void testGetById() {
-        Trainee trainee = new Trainee();
-
         when(traineeRepository.getById(1)).thenReturn(Optional.of(trainee));
 
         Optional<Trainee> result = traineeService.getById(1);
@@ -106,8 +116,6 @@ public class TraineeServiceImplTest {
 
     @Test
     public void testGetByUsername() {
-        Trainee trainee = new Trainee();
-
         when(traineeRepository.getByUsername("Joe")).thenReturn(Optional.of(trainee));
 
         Optional<Trainee> result = traineeService.getByUsername("Joe");
@@ -117,7 +125,7 @@ public class TraineeServiceImplTest {
 
     @Test
     public void testGetTrainees() {
-        List<Trainee> trainees = List.of(new Trainee(), new Trainee());
+        List<Trainee> trainees = List.of(trainee, trainee);
 
         when(traineeRepository.getTrainees()).thenReturn(trainees);
 

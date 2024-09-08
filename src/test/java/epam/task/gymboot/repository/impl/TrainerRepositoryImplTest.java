@@ -2,6 +2,8 @@ package epam.task.gymboot.repository.impl;
 
 import epam.task.gymboot.entity.Trainer;
 import epam.task.gymboot.entity.User;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,63 +24,61 @@ public class TrainerRepositoryImplTest {
     @Mock
     private Map<Integer, Trainer> trainers;
 
+    private Trainer trainer1;
+
+    @BeforeEach
+    void setUp() {
+        trainer1 = new Trainer();
+    }
+
     @Test
     public void testAddTrainerNoTrainers() {
-        Trainer trainer = new Trainer();
-
         when(trainers.keySet()).thenReturn(Collections.emptySet());
-        when(trainers.get(1)).thenReturn(trainer);
+        when(trainers.get(1)).thenReturn(trainer1);
 
-        Optional<Trainer> result = trainerRepository.add(trainer);
+        Optional<Trainer> result = trainerRepository.add(trainer1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainer, result.get());
+        assertEquals(trainer1, result.get());
     }
 
     @Test
     public void testAddTrainerFewTrainers() {
-        Trainer trainer = new Trainer();
-
         when(trainers.keySet()).thenReturn(Set.of(2, 5, 9));
-        when(trainers.put(10, trainer)).thenReturn(null);
-        when(trainers.get(10)).thenReturn(trainer);
+        when(trainers.get(10)).thenReturn(trainer1);
 
-        Optional<Trainer> result = trainerRepository.add(trainer);
+        Optional<Trainer> result = trainerRepository.add(trainer1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainer, result.get());
+        assertEquals(trainer1, result.get());
     }
 
     @Test
     public void testEditTrainer() {
-        Trainer trainer = new Trainer();
-        trainer.setTrainerId(1);
+        trainer1.setTrainerId(1);
 
-        when(trainers.replace(1, trainer)).thenReturn(trainer);
+        when(trainers.replace(1, trainer1)).thenReturn(trainer1);
 
-        Optional<Trainer> result = trainerRepository.edit(trainer);
+        Optional<Trainer> result = trainerRepository.edit(trainer1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainer, result.get());
+        assertEquals(trainer1, result.get());
     }
 
     @Test
     public void testGetByIdFound() {
-        Trainer trainer = new Trainer();
-        trainer.setTrainerId(1);
+        trainer1.setTrainerId(1);
 
-        when(trainers.get(1)).thenReturn(trainer);
+        when(trainers.get(1)).thenReturn(trainer1);
 
         Optional<Trainer> result = trainerRepository.getById(1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainer, result.get());
+        assertEquals(trainer1, result.get());
     }
 
     @Test
     public void testGetByIdNotFound() {
-        when(trainers.get(1)).thenReturn(null);
-
         Optional<Trainer> result = trainerRepository.getById(1);
 
         assertFalse(result.isPresent());
@@ -86,17 +86,16 @@ public class TrainerRepositoryImplTest {
 
     @Test
     public void testGetByUsername() {
-        Trainer trainer = new Trainer();
         User user = new User();
         user.setUsername("Karl");
-        trainer.setUser(user);
+        trainer1.setUser(user);
 
-        when(trainers.values()).thenReturn(Collections.singleton(trainer));
+        when(trainers.values()).thenReturn(Collections.singleton(trainer1));
 
         Optional<Trainer> result = trainerRepository.getByUsername("Karl");
 
         assertTrue(result.isPresent());
-        assertEquals(trainer, result.get());
+        assertEquals(trainer1, result.get());
     }
 
     @Test
@@ -110,7 +109,6 @@ public class TrainerRepositoryImplTest {
 
     @Test
     public void testGetTrainers() {
-        Trainer trainer1 = new Trainer();
         trainer1.setTrainerId(1);
         Trainer trainer2 = new Trainer();
         trainer2.setTrainerId(2);
@@ -125,7 +123,6 @@ public class TrainerRepositoryImplTest {
 
     @Test
     public void testGetAllTrainerUsernamesByUsername() {
-        Trainer trainer1 = new Trainer();
         trainer1.setTrainerId(1);
         User user1 = new User();
         user1.setUsername("Joe.Doe");
@@ -136,12 +133,6 @@ public class TrainerRepositoryImplTest {
         User user2 = new User();
         user2.setUsername("Joe.Doe1");
         trainer2.setUser(user2);
-
-        Trainer trainer3 = new Trainer();
-        trainer3.setTrainerId(3);
-        User user3 = new User();
-        user3.setUsername("Jane.Doe");
-        trainer3.setUser(user3);
 
         List<String> expectedUsernames = List.of("Joe.Doe", "Joe.Doe1");
 

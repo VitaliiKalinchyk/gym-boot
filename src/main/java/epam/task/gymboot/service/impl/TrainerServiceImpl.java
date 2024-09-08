@@ -1,6 +1,7 @@
 package epam.task.gymboot.service.impl;
 
 import epam.task.gymboot.entity.Trainer;
+import epam.task.gymboot.entity.User;
 import epam.task.gymboot.repository.TraineeRepository;
 import epam.task.gymboot.repository.TrainerRepository;
 import epam.task.gymboot.service.TrainerService;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -31,8 +33,10 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Optional<Trainer> add(Trainer trainer) {
-        trainer.getUser().setUsername(generateUsername(trainer));
-        trainer.getUser().setPassword(passwordGenerator.generatePassword());
+        User user = Objects.requireNonNull(trainer.getUser(), "Adding trainer failed - user is null");
+
+        user.setUsername(generateUsername(trainer));
+        user.setPassword(passwordGenerator.generatePassword());
 
         return trainerRepository.add(trainer);
     }

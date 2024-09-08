@@ -3,6 +3,7 @@ package epam.task.gymboot.service.impl;
 import epam.task.gymboot.entity.Training;
 import epam.task.gymboot.repository.TrainingRepository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,10 +25,16 @@ class TrainingServiceImplTest {
     @InjectMocks
     private TrainingServiceImpl trainingService;
 
+    private Training training;
+
+    @BeforeEach
+    void setUp() {
+        training = new Training();
+        training.setTrainingId(1);
+    }
+
     @Test
     void addTraining() {
-        Training training = new Training();
-
         when(trainingRepository.add(training)).thenReturn(Optional.of(training));
 
         Optional<Training> result = trainingService.add(training);
@@ -37,9 +44,6 @@ class TrainingServiceImplTest {
 
     @Test
     void getTrainingById() {
-        Training training = new Training();
-        training.setTrainingId(1);
-
         when(trainingRepository.getById(1)).thenReturn(Optional.of(training));
 
         Optional<Training> result = trainingService.getById(1);
@@ -50,7 +54,7 @@ class TrainingServiceImplTest {
 
     @Test
     void getTrainings() {
-        List<Training> trainings = List.of(new Training(), new Training());
+        List<Training> trainings = List.of(training, training);
 
         when(trainingRepository.getTrainings()).thenReturn(trainings);
 

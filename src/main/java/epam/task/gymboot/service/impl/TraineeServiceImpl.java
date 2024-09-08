@@ -1,5 +1,6 @@
 package epam.task.gymboot.service.impl;
 
+import epam.task.gymboot.entity.User;
 import epam.task.gymboot.repository.TraineeRepository;
 import epam.task.gymboot.repository.TrainerRepository;
 import epam.task.gymboot.entity.Trainee;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -31,8 +33,10 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public Optional<Trainee> add(Trainee trainee) {
-        trainee.getUser().setUsername(generateUsername(trainee));
-        trainee.getUser().setPassword(passwordGenerator.generatePassword());
+        User user = Objects.requireNonNull(trainee.getUser(), "Adding trainee failed - user is null");
+
+        user.setUsername(generateUsername(user));
+        user.setPassword(passwordGenerator.generatePassword());
 
         return traineeRepository.add(trainee);
     }
@@ -62,8 +66,8 @@ public class TraineeServiceImpl implements TraineeService {
         return traineeRepository.getTrainees();
     }
 
-    private String generateUsername(Trainee trainee) {
-        String username = nameGenerator.generateUsername(trainee.getUser());
+    private String generateUsername(User user) {
+        String username = nameGenerator.generateUsername(user);
 
         if (traineeRepository.getByUsername(username).isEmpty() &&
                 trainerRepository.getByUsername(username).isEmpty()) {

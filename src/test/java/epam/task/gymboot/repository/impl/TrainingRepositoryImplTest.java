@@ -1,6 +1,8 @@
 package epam.task.gymboot.repository.impl;
 
 import epam.task.gymboot.entity.Training;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,50 +23,49 @@ public class TrainingRepositoryImplTest {
     @Mock
     private Map<Integer, Training> trainings;
 
+    private Training training1;
+
+    @BeforeEach
+    void setUp() {
+        training1 = new Training();
+    }
+
     @Test
     public void testAddTrainingNoTrainings() {
-        Training training = new Training();
-
         when(trainings.keySet()).thenReturn(Collections.emptySet());
-        when(trainings.get(1)).thenReturn(training);
+        when(trainings.get(1)).thenReturn(training1);
 
-        Optional<Training> result = trainingRepository.add(training);
+        Optional<Training> result = trainingRepository.add(training1);
 
         assertTrue(result.isPresent());
-        assertEquals(training, result.get());
+        assertEquals(training1, result.get());
     }
 
     @Test
     public void testAddTrainingFewTrainings() {
-        Training training = new Training();
-
         when(trainings.keySet()).thenReturn(Set.of(2, 5, 9));
-        when(trainings.put(10, training)).thenReturn(null);
-        when(trainings.get(10)).thenReturn(training);
+        when(trainings.get(10)).thenReturn(training1);
 
-        Optional<Training> result = trainingRepository.add(training);
+        Optional<Training> result = trainingRepository.add(training1);
 
         assertTrue(result.isPresent());
-        assertEquals(training, result.get());
+        assertEquals(training1, result.get());
     }
 
     @Test
     public void testGetByIdFound() {
-        Training training = new Training();
-        training.setTrainingId(1);
+        training1.setTrainingId(1);
 
-        when(trainings.get(1)).thenReturn(training);
+        when(trainings.get(1)).thenReturn(training1);
 
         Optional<Training> result = trainingRepository.getById(1);
 
         assertTrue(result.isPresent());
-        assertEquals(training, result.get());
+        assertEquals(training1, result.get());
     }
 
     @Test
     public void testGetByIdNotFound() {
-        when(trainings.get(1)).thenReturn(null);
-
         Optional<Training> result = trainingRepository.getById(1);
 
         assertFalse(result.isPresent());
@@ -72,7 +73,6 @@ public class TrainingRepositoryImplTest {
 
     @Test
     public void testGetTrainings() {
-        Training training1 = new Training();
         training1.setTrainingId(1);
         Training training2 = new Training();
         training2.setTrainingId(2);

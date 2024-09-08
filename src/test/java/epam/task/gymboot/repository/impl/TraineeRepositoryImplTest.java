@@ -2,6 +2,8 @@ package epam.task.gymboot.repository.impl;
 
 import epam.task.gymboot.entity.Trainee;
 import epam.task.gymboot.entity.User;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,44 +24,45 @@ public class TraineeRepositoryImplTest {
     @Mock
     private Map<Integer, Trainee> trainees;
 
+    private Trainee trainee1;
+
+    @BeforeEach
+    void setUp() {
+        trainee1 = new Trainee();
+    }
+
     @Test
     public void testAddTraineeNoTrainees() {
-        Trainee trainee = new Trainee();
-
         when(trainees.keySet()).thenReturn(Collections.emptySet());
-        when(trainees.get(1)).thenReturn(trainee);
+        when(trainees.get(1)).thenReturn(trainee1);
 
-        Optional<Trainee> result = traineeRepository.add(trainee);
+        Optional<Trainee> result = traineeRepository.add(trainee1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
+        assertEquals(trainee1, result.get());
     }
 
     @Test
     public void testAddTraineeFewTrainees() {
-        Trainee trainee = new Trainee();
-
         when(trainees.keySet()).thenReturn(Set.of(2, 5, 9));
-        when(trainees.put(10, trainee)).thenReturn(null);
-        when(trainees.get(10)).thenReturn(trainee);
+        when(trainees.get(10)).thenReturn(trainee1);
 
-        Optional<Trainee> result = traineeRepository.add(trainee);
+        Optional<Trainee> result = traineeRepository.add(trainee1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
+        assertEquals(trainee1, result.get());
     }
 
     @Test
     public void testEditTrainee() {
-        Trainee trainee = new Trainee();
-        trainee.setTraineeId(1);
+        trainee1.setTraineeId(1);
 
-        when(trainees.replace(1, trainee)).thenReturn(trainee);
+        when(trainees.replace(1, trainee1)).thenReturn(trainee1);
 
-        Optional<Trainee> result = traineeRepository.edit(trainee);
+        Optional<Trainee> result = traineeRepository.edit(trainee1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
+        assertEquals(trainee1, result.get());
     }
 
     @Test
@@ -82,15 +85,14 @@ public class TraineeRepositoryImplTest {
 
     @Test
     public void testGetByIdFound() {
-        Trainee trainee = new Trainee();
-        trainee.setTraineeId(1);
+        trainee1.setTraineeId(1);
 
-        when(trainees.get(1)).thenReturn(trainee);
+        when(trainees.get(1)).thenReturn(trainee1);
 
         Optional<Trainee> result = traineeRepository.getById(1);
 
         assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
+        assertEquals(trainee1, result.get());
     }
 
     @Test
@@ -104,17 +106,16 @@ public class TraineeRepositoryImplTest {
 
     @Test
     public void testGetByUsername() {
-        Trainee trainee = new Trainee();
         User user = new User();
         user.setUsername("Karl");
-        trainee.setUser(user);
+        trainee1.setUser(user);
 
-        when(trainees.values()).thenReturn(Collections.singleton(trainee));
+        when(trainees.values()).thenReturn(Collections.singleton(trainee1));
 
         Optional<Trainee> result = traineeRepository.getByUsername("Karl");
 
         assertTrue(result.isPresent());
-        assertEquals(trainee, result.get());
+        assertEquals(trainee1, result.get());
     }
 
     @Test
@@ -128,7 +129,6 @@ public class TraineeRepositoryImplTest {
 
     @Test
     public void testGetTrainees() {
-        Trainee trainee1 = new Trainee();
         trainee1.setTraineeId(1);
         Trainee trainee2 = new Trainee();
         trainee2.setTraineeId(2);
@@ -143,7 +143,6 @@ public class TraineeRepositoryImplTest {
 
     @Test
     public void testGetAllTraineeUsernamesByUsername() {
-        Trainee trainee1 = new Trainee();
         trainee1.setTraineeId(1);
         User user1 = new User();
         user1.setUsername("Joe.Doe");
@@ -155,11 +154,6 @@ public class TraineeRepositoryImplTest {
         user2.setUsername("Joe.Doe1");
         trainee2.setUser(user2);
 
-        Trainee trainee3 = new Trainee();
-        trainee3.setTraineeId(3);
-        User user3 = new User();
-        user3.setUsername("Jane.Doe");
-        trainee3.setUser(user3);
         List<String> expectedUsernames = List.of("Joe.Doe", "Joe.Doe1");
 
         when(trainees.values()).thenReturn(Set.of(trainee1, trainee2));

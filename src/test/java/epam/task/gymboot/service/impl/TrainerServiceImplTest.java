@@ -7,6 +7,7 @@ import epam.task.gymboot.repository.TrainerRepository;
 import epam.task.gymboot.utils.NameGenerator;
 import epam.task.gymboot.utils.PasswordGenerator;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,15 +39,22 @@ class TrainerServiceImplTest {
     @InjectMocks
     private TrainerServiceImpl trainerService;
 
+    private Trainer trainer;
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        trainer = new Trainer();
+        user =  new User();
+    }
+
     @Test
     public void testAddTrainer() {
-        Trainer trainer = new Trainer();
-        User user = new User();
         trainer.setUser(user);
 
         when(nameGenerator.generateUsername(user)).thenReturn("uniqueUsername");
         when(passwordGenerator.generatePassword()).thenReturn("securePassword");
-        when(trainerRepository.add(any(Trainer.class))).thenReturn(Optional.of(trainer));
+        when(trainerRepository.add(trainer)).thenReturn(Optional.of(trainer));
         when(trainerRepository.getByUsername("uniqueUsername")).thenReturn(Optional.empty());
         when(traineeRepository.getByUsername("uniqueUsername")).thenReturn(Optional.empty());
 
@@ -59,8 +67,6 @@ class TrainerServiceImplTest {
 
     @Test
     public void testGenerateUsernameForMultipleCases() {
-        Trainer trainer = new Trainer();
-        User user = new User();
         trainer.setUser(user);
 
         when(nameGenerator.generateUsername(user)).thenReturn("username");
@@ -73,10 +79,15 @@ class TrainerServiceImplTest {
     }
 
     @Test
-    public void testEditTrainer() {
-        Trainer trainer = new Trainer();
+    public void testAddTrainerNoUser() {
+        RuntimeException exception = assertThrows(NullPointerException.class, () -> trainerService.add(trainer));
 
-        when(trainerRepository.edit(any(Trainer.class))).thenReturn(Optional.of(trainer));
+        assertEquals("Adding trainer failed - user is null", exception.getMessage());
+    }
+
+    @Test
+    public void testEditTrainer() {
+        when(trainerRepository.edit(trainer)).thenReturn(Optional.of(trainer));
 
         Optional<Trainer> result = trainerService.edit(trainer);
 
@@ -86,8 +97,6 @@ class TrainerServiceImplTest {
 
     @Test
     public void testGetById() {
-        Trainer trainer = new Trainer();
-
         when(trainerRepository.getById(1)).thenReturn(Optional.of(trainer));
 
         Optional<Trainer> result = trainerService.getById(1);
@@ -97,8 +106,6 @@ class TrainerServiceImplTest {
 
     @Test
     public void testGetByUsername() {
-        Trainer trainer = new Trainer();
-
         when(trainerRepository.getByUsername("Joe")).thenReturn(Optional.of(trainer));
 
         Optional<Trainer> result = trainerService.getByUsername("Joe");
@@ -108,7 +115,7 @@ class TrainerServiceImplTest {
 
     @Test
     public void testGetTrainers() {
-        List<Trainer> trainers = List.of(new Trainer(), new Trainer());
+        List<Trainer> trainers = List.of(trainer, trainer);
 
         when(trainerRepository.getTrainers()).thenReturn(trainers);
 
