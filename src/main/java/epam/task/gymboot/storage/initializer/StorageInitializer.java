@@ -12,9 +12,9 @@ import epam.task.gymboot.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import jakarta.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,7 @@ public class StorageInitializer {
 
     private final Storage storage;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void initializeStorage() {
         ObjectMapper om = new ObjectMapper(new YAMLFactory());
 
@@ -46,13 +46,13 @@ public class StorageInitializer {
 
             YamlDataContainer root = om.readValue(inputStream, YamlDataContainer.class);
 
-            storage.setTrainees(root.getTrainees().stream()
+            storage.getTrainees().putAll(root.getTrainees().stream()
                     .collect(Collectors.toMap(Trainee::getTraineeId, Function.identity())));
 
-            storage.setTrainers(root.getTrainers().stream()
+            storage.getTrainers().putAll(root.getTrainers().stream()
                     .collect(Collectors.toMap(Trainer::getTrainerId, Function.identity())));
 
-            storage.setTrainings(root.getTrainings().stream()
+            storage.getTrainings().putAll(root.getTrainings().stream()
                     .collect(Collectors.toMap(Training::getTrainingId, Function.identity())));
 
             log.info("Storage successfully initialized with {} trainees, {} trainers, and {} trainings.",
