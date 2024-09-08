@@ -6,17 +6,15 @@ import epam.task.gymboot.entity.Training;
 import epam.task.gymboot.storage.Storage;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
-@Setter
 @Component
 public class InMemoryStorage implements Storage {
-    private Map<Integer, Trainee> trainees = new ConcurrentHashMap<>();
-    private Map<Integer, Trainer> trainers = new ConcurrentHashMap<>();
-    private Map<Integer, Training> trainings = new ConcurrentHashMap<>();
+    private final Map<Integer, Trainee> trainees = new ConcurrentHashMap<>();
+    private final Map<Integer, Trainer> trainers = new ConcurrentHashMap<>();
+    private final Map<Integer, Training> trainings = new ConcurrentHashMap<>();
 }
