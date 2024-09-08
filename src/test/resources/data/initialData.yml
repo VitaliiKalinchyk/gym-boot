@@ -1,0 +1,29 @@
+trainees:
+  - traineeId: 1
+    user:
+      userId: 1
+      firstName: Karl
+      lastName: Gunner
+      username: Karl.Gunner
+      password:
+      active: TRUE
+    birthday: 1999-10-01
+    address: Springfield, Valentine st., 4
+trainers:
+  - trainerId: 1
+    user:
+      userId: 2
+      firstName: Karl
+      lastName: Gunner
+      username: Karl.Gunner1
+      password:
+      active: TRUE
+    trainingType: YOGA
+trainings:
+  - trainingId: 1
+    traineeId: 1
+    trainerId: 2
+    name: first training
+    trainingType: ZUMBA
+    date: 2024-08-17
+    durationMinutes: 60
