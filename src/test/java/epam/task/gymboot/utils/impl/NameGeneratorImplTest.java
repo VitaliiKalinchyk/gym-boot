@@ -58,6 +58,15 @@ class NameGeneratorImplTest {
     }
 
     @Test
+    public void testGenerateUsernameWithSimilarUsernames() {
+        List<String> existingUsernames = List.of("John.Doe1", "John.Doe2", "john.doe7", "John.Doer5", "aJohn.Doer9");
+
+        String generatedUsername = nameGenerator.generateUsername("John.Doe", existingUsernames);
+
+        assertEquals("John.Doe3", generatedUsername);
+    }
+
+    @Test
     public void testGenerateUsernameWithNoExistingIndexes() {
         List<String> existingUsernames = List.of("John.Doe");
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.ToIntFunction;
 
 @Component
 public class NameGeneratorImpl implements NameGenerator {
@@ -17,13 +18,22 @@ public class NameGeneratorImpl implements NameGenerator {
     }
 
     @Override
-    public String generateUsername(String username, List<String> existingUsername) {
-        int maxIndex = existingUsername.stream()
-                        .map(userName -> userName.replaceAll("\\D+?(\\d*)$", "$1"))
-                        .filter(s -> !s.isEmpty())
-                        .mapToInt(Integer::parseInt)
-                        .max()
-                        .orElse(0);
+    public String generateUsername(String username, List<String> existingUsernames) {
+        ToIntFunction<String> stringToIntFunction = i -> {
+            try {
+                return Integer.parseInt(i);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        };
+
+        int maxIndex = existingUsernames.stream()
+                .filter(u -> u.startsWith(username))
+                .map(u -> u.substring(username.length()))
+                .filter(s -> !s.isEmpty())
+                .mapToInt(stringToIntFunction)
+                .max()
+                .orElse(0);
 
         return username + (maxIndex + 1);
     }
