@@ -6,6 +6,9 @@ target/
 mvnw
 mvnw.cmd
 
+src/main/resources/data/initialData.yml
+.env
+
 ### STS ###
 .apt_generated
 .classpath
